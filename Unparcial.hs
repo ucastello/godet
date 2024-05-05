@@ -1,3 +1,4 @@
+module Unparcial where 
 ------------------- ej 1 -------------------
 atajaronSuplentes :: [(String,String)] -> [Integer] -> Integer -> Integer
 atajaronSuplentes (x:xs) (y:ys) n = n - golesTitulares (x:xs) (y:ys)
@@ -64,7 +65,8 @@ soyGladys ((x,y):(x1,y1):xs) | x/=x1 && x/=y1 && y/= x1 && y/=y1 && soyGladys ((
 
 ------------------- ej 3 -------------------
 porcentajeDeGoles :: String -> [(String,String)] -> [Integer] -> Float
-porcentajeDeGoles n (x:xs) (g:gs) = division (golesDelGoleador n (x:xs) (g:gs)) (golesDeGoleadores (x:xs)(g:gs))
+porcentajeDeGoles "" [] [] = 0
+porcentajeDeGoles n (x:xs) (g:gs) = division (golesDelGoleador n (x:xs) (g:gs)) (golesDeGoleadores (x:xs)(g:gs)) *100
 
 golesDelGoleador :: String -> [(String,String)] -> [Integer] -> Integer
 golesDelGoleador _ [x] [g] = g
@@ -76,6 +78,7 @@ division a b = fromIntegral a / fromIntegral b
 
 ------------------- ej 4 -------------------
 botinDeOro :: [(String,String)] -> [Integer] -> String
+botinDeOro [] [] = []
 botinDeOro (x:xs) (g:gs) = fst (maximo (golesGoleador (x:xs)(g:gs)))
 
 golesGoleador :: [(String,String)] -> [Integer] -> [(String,Integer)]
@@ -86,3 +89,60 @@ maximo :: [(String,Integer)] -> (String,Integer)
 maximo [(y,g)] = (y,g)
 maximo ((y,g):(y1,g1):xs) | g >= g1 = maximo ((y,g):xs)
                           | otherwise = maximo ((y1,g1):xs)
+
+------------------------------------------------------------ Otro Parcial------------------------------------------------------------
+------------------- ej 1 -------------------
+relacionesValidas :: [(String,String)] -> Bool
+relacionesValidas [] = True
+relacionesValidas ((a,b):xs) = laTuplaEstaPermitida ((a,b):xs) && relacionesValidas xs
+
+laTuplaEstaPermitida :: [(String,String)] -> Bool
+laTuplaEstaPermitida [] = True  
+laTuplaEstaPermitida [(a,b)] = a/=b 
+laTuplaEstaPermitida ((a,b):(c,d):xs) = (a,b) /= (c,d) && (b,a) /= (c,d) && laTuplaEstaPermitida ((a,b):xs) 
+
+------------------- ej 2 -------------------
+personas :: [(String,String)] -> [String]
+personas [] = []
+personas (x:xs) = sacarRepetido (personasRepetidas (x:xs))
+
+personasRepetidas :: [(String,String)] -> [String]
+personasRepetidas [] = []
+personasRepetidas ((x,y):xs) = x : y : personasRepetidas xs
+
+sacarPersona :: String -> [String] -> [String]
+sacarPersona _ [] = []
+sacarPersona p (x:xs) | p == x = sacarPersona p xs 
+                      | otherwise = x : sacarPersona p xs 
+
+sacarRepetido :: [String] -> [String]
+sacarRepetido [] = []
+sacarRepetido (x:xs) = x : sacarPersona x (sacarRepetido xs)
+
+------------------- ej 3 -------------------
+amigosDe :: String -> [(String,String)] -> [String]
+amigosDe p (x:xs) = sacarPersona p (personasRepetidas (amiguisdeP p (x:xs)))
+
+amiguisdeP :: String -> [(String,String)] -> [(String,String)]
+amiguisdeP _ [] = []
+amiguisdeP p ((x,y):xs) | p == x || p == y = (x,y) : amiguisdeP p xs   
+                        | otherwise = amiguisdeP p xs
+
+------------------- ej 4 -------------------
+personaConMasAmigos :: [(String,String)] -> String
+personaConMasAmigos [] = []
+personaConMasAmigos (x:xs) = maximodeaca (personasYsusAmigos (personas (x:xs)) (x:xs))
+
+cuantasVecesAparece :: String -> [(String,String)] -> Integer
+cuantasVecesAparece _ [] = 0
+cuantasVecesAparece n ((x,y):xs) | n == x || n == y = 1 + cuantasVecesAparece n xs
+                                 | otherwise = cuantasVecesAparece n xs 
+
+personasYsusAmigos :: [String] -> [(String,String)] -> [(String,Integer)]
+personasYsusAmigos [] _ = []
+personasYsusAmigos (p:ps) (x:xs) = (p,cuantasVecesAparece p (x:xs)) : personasYsusAmigos ps (x:xs)
+
+maximodeaca :: [(String,Integer)] -> String 
+maximodeaca [(p,a)] = p 
+maximodeaca ((p,a):(p1,a1):xs) | a >= a1 = maximodeaca ((p,a):xs)
+                               | otherwise = maximodeaca ((p1,a1):xs)
