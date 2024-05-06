@@ -26,3 +26,23 @@ testbotinDeOro = test [
                "Nadie metio goles nene" ~: botinDeOro [("a","b"),("c","d"),("c","d")] [0,0,0] ~?= "b",
                "Haaland estaba" ~: botinDeOro [("city","Haaland"),("bosta","gagani"),("psg","mbappe")] [10,0,9] ~?= "Haaland"
                 ]
+
+testhayQueCodificar = test [
+                    "No" ~: hayQueCodificar 'a' [] ~?= False,
+                    "Tampoco" ~: hayQueCodificar 'a' [('b','a')] ~?= False,
+                    "Si" ~: hayQueCodificar 'a' [('a','b')] ~?= True
+                    ]
+
+testcuantasVecesHayQueCodificar = test [
+                                "No hay que hacerlo" ~: cuantasVecesHayQueCodificar 'c' "anashec" [] ~?= 0,
+                                "Hay que hacerlo" ~: cuantasVecesHayQueCodificar 'c' "anashecc" [('c','b')] ~?= 2
+                                ]   
+testlaQueMasHayQueCodificar = test  [
+                            "El unico porque esta la hice mal" ~: laQueMasHayQueCodificar "anashecc" [('c','b')] ~?= 'c',
+                            "para eh" ~: laQueMasHayQueCodificar "anashecc" [('a','b'),('c','b')] ~?= 'a'
+                            ]
+
+testcodificarFrase = test [
+                    "gordi no codifico un carajo" ~: codificarFrase "afkjnagskjnakg" [] ~?= "afkjnagskjnakg",
+                    "ok ahi codifico" ~: codificarFrase "afkjnagskjnakg" [('n','l')] ~?= "afkjlagskjlakg"
+                    ]

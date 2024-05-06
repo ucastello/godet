@@ -146,3 +146,45 @@ maximodeaca :: [(String,Integer)] -> String
 maximodeaca [(p,a)] = p 
 maximodeaca ((p,a):(p1,a1):xs) | a >= a1 = maximodeaca ((p,a):xs)
                                | otherwise = maximodeaca ((p1,a1):xs)
+
+------------------------------------------------------------ Otro Parcial------------------------------------------------------------  
+------------------- ej 1 -------------------
+hayQueCodificar :: Char -> [(Char,Char)] -> Bool
+hayQueCodificar _ [] = False
+hayQueCodificar c ((x,y):xs) | c == x = True
+                             | otherwise = hayQueCodificar c xs
+
+------------------- ej 2 -------------------
+cuantasVecesHayQueCodificar :: Char -> [Char] -> [(Char,Char)] -> Integer
+cuantasVecesHayQueCodificar _ _ [] = 0
+cuantasVecesHayQueCodificar c (x:xs) (y:ys) | hayQueCodificar c (y:ys) == False = 0
+                                            | otherwise = sumarApariciones c (x:xs)
+
+sumarApariciones :: Char -> [Char] -> Integer
+sumarApariciones _ [] = 0
+sumarApariciones c (x:xs) | c == x = 1 + sumarApariciones c xs
+                          | otherwise = sumarApariciones c xs
+
+------------------- ej 3 -------------------
+laQueMasHayQueCodificar :: [Char] -> [(Char,Char)] -> Char
+laQueMasHayQueCodificar (x:xs) (y:ys) = fst (masVeces (letrasYsusApariciones (x:xs) (y:ys)))
+
+letrasYsusApariciones :: [Char] -> [(Char,Char)] -> [(Char,Integer)]
+letrasYsusApariciones [] _ = []
+letrasYsusApariciones (x:xs) ys | hayQueCodificar x ys == False = (x,0) : letrasYsusApariciones xs ys
+                                | otherwise = (x,sumarApariciones x (x:xs)) : letrasYsusApariciones xs ys
+
+masVeces :: [(Char,Integer)] -> (Char,Integer)
+masVeces [(a,n)] = (a,n) 
+masVeces ((a,n):(a1,n1):xs) | n >= n1 = masVeces ((a,n):xs)
+                            | otherwise = masVeces ((a1,n1):xs)
+
+------------------- ej 4 -------------------
+codificarFrase :: [Char] -> [(Char,Char)] -> [Char]
+codificarFrase [] _ = []
+codificarFrase (x:xs) ns = cambiarLaLetra x ns : codificarFrase xs ns 
+
+cambiarLaLetra :: Char -> [(Char,Char)] -> Char
+cambiarLaLetra x [] = x
+cambiarLaLetra x ((n,m):xs) | x == n = m 
+                            | otherwise = cambiarLaLetra x xs 
