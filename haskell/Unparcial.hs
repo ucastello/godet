@@ -188,3 +188,90 @@ cambiarLaLetra :: Char -> [(Char,Char)] -> Char
 cambiarLaLetra x [] = x
 cambiarLaLetra x ((n,m):xs) | x == n = m 
                             | otherwise = cambiarLaLetra x xs 
+
+------------------------------------------------------------ Otro Parcial------------------------------------------------------------  
+------------------- ej 1 -------------------
+aproboMasDeNMaterias :: [([Char],[Integer])] -> [Char] -> Integer -> Bool
+aproboMasDeNMaterias ((alumnos,(notas:ns)):xs) alumno parciales | xs == [] && parcialesAprobados (notas:ns) >= parciales = True
+                                                                | esEseElAlumno ((alumnos,(notas:ns))) alumno == True = elNumeroEsMayorIgual (parcialesAprobados(notas:ns)) parciales
+                                                                | otherwise = aproboMasDeNMaterias xs alumno parciales
+
+elNumeroEsMayorIgual :: Integer -> Integer -> Bool
+elNumeroEsMayorIgual 0 _ = False
+elNumeroEsMayorIgual aprobadas parciales | aprobadas >= parciales = True
+                                         | otherwise = False
+
+esEseElAlumno :: ([Char],[Integer]) -> [Char] -> Bool
+esEseElAlumno ((alumnos,(notas:ns))) alumno | alumno == alumnos = True
+                                            | otherwise = False
+
+parcialesAprobados :: [Integer] -> Integer
+parcialesAprobados [] = 0
+parcialesAprobados (x:xs) | x >= 4 = 1 + parcialesAprobados xs
+                          | otherwise = parcialesAprobados xs
+
+------------------- ej 2 -------------------
+buenosAlumnos :: [([Char],[Integer])] -> [[Char]]
+buenosAlumnos ((nombre,(notas)):xs) = todosLosPromocionados (buenosAlumnosAux (noDesaprobaronNinguna ((nombre,(notas)):xs)))
+
+buenosAlumnosAux :: [([Char],[Integer])] -> [([Char],Float)]
+buenosAlumnosAux [] = []
+buenosAlumnosAux ((alumno,(nota:notas)):xs) = (alumno,promedioDeNotas) : buenosAlumnosAux xs 
+                                            where promedioDeNotas = promedio (sumaDeNotas (nota:notas)) (cuntosParcialesRindio (nota:notas))
+
+todosLosPromocionados :: [([Char],Float)] -> [[Char]]
+todosLosPromocionados [] = []
+todosLosPromocionados ((nombre,promedio):xs) | promedio >= 8 = nombre : todosLosPromocionados xs
+                                             | otherwise = todosLosPromocionados xs
+
+sumaDeNotas :: [Integer] -> Integer
+sumaDeNotas [] = 0
+sumaDeNotas (nota:notas) = nota + sumaDeNotas notas 
+
+cuntosParcialesRindio :: [Integer] -> Integer
+cuntosParcialesRindio [] = 0
+cuntosParcialesRindio (nota:notas) = 1 + cuntosParcialesRindio notas 
+
+desaproboUna :: [Integer] -> Bool
+desaproboUna [] = False
+desaproboUna (nota:notas) | nota < 4 = True
+                          | otherwise = desaproboUna notas 
+
+noDesaprobaronNinguna :: [([Char],[Integer])] -> [([Char],[Integer])] 
+noDesaprobaronNinguna [] = []
+noDesaprobaronNinguna ((nombre,(nota:notas)):xs) | desaproboUna (nota:notas) == False = (nombre,(nota:notas)) : noDesaprobaronNinguna xs
+                                                 | otherwise = noDesaprobaronNinguna xs
+
+promedio :: Integer -> Integer -> Float
+promedio a b = fromIntegral a / fromIntegral b 
+
+------------------- ej 3 -------------------
+mejorPromedio :: [([Char],[Integer])] -> [Char]
+mejorPromedio alumnosYpromedios = maximoPromedio (buenosAlumnosAux alumnosYpromedios)
+
+
+maximoPromedio :: [([Char],Float)] -> [Char]
+maximoPromedio [] = []
+maximoPromedio [(nombre,promedio)] = nombre
+maximoPromedio ((nombre,promedio):(n1,p1):xs) | promedio >= p1 = maximoPromedio ((nombre,promedio):xs)
+                                              | otherwise = maximoPromedio ((n1,p1):xs)
+
+------------------- ej 4 -------------------
+-- seGraduoConHonores :: [([Char],[Integer])] -> Integer -> [Char] -> Bool
+-- seGraduoConHonores registro NdeMaterias alumno | aproboMasDeNMaterias (registro alumno NdeMaterias-1) == True && 
+
+esCasiElMejorPromedio :: [([Char],[Integer])] -> [Char] -> Bool
+esCasiElMejorPromedio [] _ = True
+esCasiElMejorPromedio ((alumnos,(notas)):xs) alumno | (promedioDeAlumno ((alumnos,(notas)):xs) alumno) >= cualCarajosEsElMejorPromedio (buenosAlumnosAux ((alumnos,(notas)):xs)) - 1 = True
+
+
+promedioDeAlumno :: [([Char],[Integer])] -> [Char] -> (Float)
+promedioDeAlumno ((alumnos,(notas)):xs) alumno | alumnos == alumno = promedioTotal
+                                               | otherwise = promedioDeAlumno xs alumno 
+                                               where promedioTotal = promedio (sumaDeNotas (notas)) (cuntosParcialesRindio (notas))
+
+cualCarajosEsElMejorPromedio :: [([Char],Integer)] -> Float 
+cualCarajosEsElMejorPromedio [] = 0
+cualCarajosEsElMejorPromedio [(nombre,promedio)] = promedio
+cualCarajosEsElMejorPromedio ((nombre,promedio):(n1,p1):xs) | promedio >= p1 = cualCarajosEsElMejorPromedio ((nombre,promedio):xs)
+                                                            | otherwise = cualCarajosEsElMejorPromedio ((n1,p1):xs)
