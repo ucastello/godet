@@ -168,3 +168,74 @@ def promedio (notas:list[int])->float:
     for nota in notas:
         n += nota 
     return n/len(notas)
+
+#4.1
+def lista_de_estudiantes ()->list[str]:
+    res:list[str] = []
+    nombre = ""
+    while(nombre != "listo"):
+        print ("un nombresito: ")
+        nombre = input()
+        if (nombre != "listo"):
+            res.append(nombre)
+    return res
+
+def historial_sube ()->list[str,float]:
+    res:list[str,float] = [] 
+    operacion:str= ""
+    monto:float = 0
+    plata:float = 0
+    print("C:cargar,D:descontar,X:cerrar")
+    while (operacion != "X"):
+        operacion= input()
+        if operacion == "C":
+            print("cuanto negro: ")
+            monto=float(input())
+            plata+=monto
+            res.append((operacion,monto))
+        elif operacion == "D":
+            print("cuanto dolio: ")
+            monto=float(input())
+            plata-=monto
+            res.append((operacion,monto))
+    print("Terminó con "+str(plata)+" pesos")
+    return res
+
+#5.1
+def pertenece_a_cada_uno_version_1 (s:list[list[int]],e:int,res:list[bool])->None:
+    res.clear() 
+    VoF:bool=False
+    for i in range(len(s)):
+        lista:list[int] = s[i]
+        for j in range(len(lista)):
+            numeros:int=lista[j]
+            if (numeros == e):
+                VoF = True
+        res.append(VoF)
+        VoF = False
+    return res
+
+#5.3
+def es_matriz(s:list[list[int]])->bool:
+    res:bool = True
+    if (s == []):
+        return False
+    for i in range(len(s)):
+        lista:list[int]=s[i]
+        if (lista == []):
+            return False
+        elif (todos_iguales(lista) == False):
+            res = False
+    return res
+
+def todos_iguales (s:list[int])->bool:
+    res:bool = True
+    j:int = 0
+    while j < ((len(s)) - 1):
+        if (s[j] != s[j+1]):
+            res = False
+        j += 1
+    return res
+
+
+
