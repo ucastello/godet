@@ -1,4 +1,5 @@
 import math
+import numpy as np
 #Parte 1
 #1.1
 def pertenece (lista:list[int],num:int)-> bool:
@@ -224,18 +225,25 @@ def es_matriz(s:list[list[int]])->bool:
         lista:list[int]=s[i]
         if (lista == []):
             return False
-        elif (todos_iguales(lista) == False):
+    res = listas_iguales(s)
+    return res
+
+def listas_iguales (s:list[list[int]])->bool:
+    res:bool=True
+    j:int=0
+    for i in range (len(s)):
+        if (len(s[0]) != len(s[i])):
             res = False
     return res
 
-def todos_iguales (s:list[int])->bool:
-    res:bool = True
-    j:int = 0
-    while j < ((len(s)) - 1):
-        if (s[j] != s[j+1]):
-            res = False
-        j += 1
+#5.4
+def filas_ordenadas (matriz:list[list[int]],res:list[bool])->None:
+    res.clear()
+    for i in range(len(matriz)):
+        res.append(ordenados(matriz[i]))
     return res
 
 
+            
+            
 
