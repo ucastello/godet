@@ -102,12 +102,11 @@ def promedio_de_estudiante (archivo,Lu:str)->float:
     promedio:float = round(suma_de_notas/materias,2)
     return promedio
 
-
 def todas_palabras2(linea,token:str)->list[str]:
     res:list[str] = []
     palabra:str = ""
     for letra in linea:
-            if (letra != token):
+            if (letra != token) and (letra != '\n'):
                 palabra += letra
             elif len(palabra) > 0:
                 res.append(palabra)
@@ -116,6 +115,10 @@ def todas_palabras2(linea,token:str)->list[str]:
         res.append(palabra)
     return res
 
+# with open ('nashe.txt',encoding='utf-8') as f:
+#     leer = f.readline()
+#     leerr = f.readline()
+#     ler = f.readline()
 #8
 def generar_nros_al_azar (cantidad,desde,hasta:int)->Pila[int]:
     p:Pila[int] = Pila()
@@ -216,7 +219,7 @@ def generar_nros_al_azar_cola(cantidad,desde,hasta:int)->Cola[int]:
     for i in range(cantidad):
         aleatorio:int = np.random.randint(desde,hasta)
         res.put(aleatorio)
-        print(aleatorio)
+    return res
 
 def generar_colas (cantidad:int)->Cola[int]:
     c:Cola[int] = Cola()
@@ -240,3 +243,125 @@ def mover_la_colita(cola_orig,cola_aux:Cola)->None:
     while not cola_aux.empty:
         cola_orig.put(cola_aux.get())
 
+def printear_cola(cola:Cola)->list:
+    lista:list = []
+    while not cola.empty():
+        lista.append(cola.get())
+    for i in lista:
+        cola.put(lista)
+    return lista
+
+#15
+def buscar_el_maximo_colas(c:Cola[int])->int:
+    lista_aux:list[int] = []
+    lista_aux.append(c.get())
+    maximo:int = lista_aux[0]
+    while not c.empty():
+        elem:int = c.get()
+        if elem > maximo:
+            maximo = elem
+            lista_aux.append(elem)
+        else:
+            lista_aux.append(elem)
+    for i in lista_aux:
+        c.put(i)
+    return maximo
+
+#16
+def armar_secuencia_bingo ()->Cola[int]:
+    sec_bingo:Cola[int] = Cola()
+    nums_disponibles:list[int] = [i for i in range(100)]
+    while len(nums_disponibles) > 0:
+        posicion_aleatoria:int = np.random.randint(0,len(nums_disponibles))
+        sec_bingo.put(nums_disponibles[posicion_aleatoria])
+        nums_disponibles.remove(nums_disponibles[posicion_aleatoria])
+    return sec_bingo
+
+def pertenece_cola (c:Cola[int],num:int)->bool:
+    res:bool = False
+    lista_aux:list[int] = []
+    while not c.empty():
+        elem = c.get()
+        lista_aux.append(elem)
+        if elem == num:
+            res = True
+    for i in lista_aux:
+        c.put(i)
+    return res
+
+def pertenece (lista:list[int],num:int)-> bool:
+    res:bool = False
+    for i in lista:
+        if (i == num):
+            res = True
+    return res
+
+def jugar_carton_bingo (carton:list[int],bolillero:Cola[int])->int:
+    bolas_jugadas:int = 0
+    while len(carton) > 0:
+        bola:int = bolillero.get()
+        bolas_jugadas += 1
+        if pertenece (carton,bola) == True:
+            carton.remove(bola)
+    return bolas_jugadas
+
+#17
+def n_pacientes_urgentes(cola:Cola[(int,str,str)])->int:
+    pacientes_graves:int = 0
+    lista_aux:list[(int,str,str)]
+    while not cola.empty():
+        paciente:tuple[int,str,str] = cola.get()
+        lista_aux.append(paciente)
+        if paciente[0] < 4:
+            pacientes_graves += 1
+    for i in lista_aux:
+        cola.put(i)
+    return pacientes_graves
+
+#19
+def agrupar_por_longitud (archivo:str)->dict[int,int]:
+    res:dict[int,int] = dict()
+    with open (archivo,encoding='utf-8') as f:
+        linea = f.readline()
+        while linea != '':
+            palabras:list[str] = todas_palabras2(linea,' ')
+            for palabra in palabras:
+                longitud:int = len(palabra)
+                if longitud in res.keys():
+                    res[longitud] += 1
+                else:
+                    res[longitud] = 1
+            linea = f.readline()
+    return res
+
+#20
+def calcular_promedio_por_estudiante(archivo:str)->dict[str,float]:
+    libreta_universitaria:dict[str,float] = dict()
+    with open (archivo,encoding='utf-8') as f:
+        linea = f.readline()
+        while linea != '':
+            alumno:str = (todas_palabras2(linea,','))[0]
+            promedio:float = promedio_de_estudiante(archivo,alumno)
+            if alumno not in libreta_universitaria.keys():
+                libreta_universitaria[alumno] = promedio
+            linea = f.readline()
+    return libreta_universitaria
+
+def promedio_estudiante (archivo,lu:str)->float:
+    promedio:float = 0
+    suma_notas:float = 0
+    cant_materias:int = 0
+    with open (archivo,encoding='utf-8') as f:
+        linea = f.readline()
+        while linea != '':
+            alumno_actual:str = (todas_palabras2(linea,','))[0]
+            nota_actual:float = (float((todas_palabras2(linea,','))[3]))
+            if (alumno_actual == lu):
+                suma_notas += nota_actual
+                cant_materias += 1
+            linea = f.readline()
+    promedio = round(suma_notas / cant_materias,2)
+    return promedio
+
+with open('reverso.txt',encoding='utf-8') as f:
+    leer = f.readline()
