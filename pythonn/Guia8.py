@@ -127,12 +127,10 @@ def generar_nros_al_azar (cantidad,desde,hasta:int)->Pila[int]:
         p.put(aleatorio)
     return p 
 
-def generar_pilas (cantidad:int)->Pila[int]:
+def generar_pilas (palabras:list[str])->Pila[str]:
     p:Pila[int] = Pila()
-    n:int = 1
-    for i in range(cantidad):
-        p.put(n)
-        n += 1
+    for palabra in range(len(palabras)):
+        p.put(palabras[palabra])
     return p 
 
 #9
@@ -365,7 +363,30 @@ def promedio_estudiante (archivo,lu:str)->float:
     promedio = round(suma_notas / cant_materias,2)
     return promedio
 
-with open('reverso.txt',encoding='utf-8') as f:
-    leer = f.readline()
 
 #21
+def la_palabra_mas_frecuente (archivo:str)->str:
+    palabras_y_apariciones:dict[str,int] = dict()
+    apariciones:tuple[str,int] = ("",0)
+    with open (archivo,encoding='utf-8') as f:
+        linea:str = f.readline()
+        while linea != '':
+            palabras:list[str] = todas_palabras2(linea,' ')
+            for palabra in palabras:
+                if palabra in palabras_y_apariciones.keys():
+                    palabras_y_apariciones[palabra] += 1
+                else:
+                    palabras_y_apariciones[palabra] = 1
+            linea = f.readline()
+    for palabra in palabras_y_apariciones:
+        if palabras_y_apariciones[palabra] > apariciones[1]:
+            apariciones = (palabra,palabras_y_apariciones[palabra])
+    return apariciones[0]
+
+#22
+def visitar_sitio (historiales:dict[str,Pila[str]],usuario,sitio:str)->None:
+    for usuarios in historiales.keys():
+        if usuarios == usuario:
+            historiales[usuario].put(sitio)
+    return historiales
+
