@@ -340,10 +340,11 @@ def calcular_promedio_por_estudiante(archivo:str)->dict[str,float]:
     with open (archivo,encoding='utf-8') as f:
         linea = f.readline()
         while linea != '':
-            alumno:str = (todas_palabras2(linea,','))[0]
-            promedio:float = promedio_de_estudiante(archivo,alumno)
-            if alumno not in libreta_universitaria.keys():
-                libreta_universitaria[alumno] = promedio
+            if linea[0] != '\n':
+                alumno:str = (todas_palabras2(linea,','))[0]
+                promedio:float = promedio_estudiante(archivo,alumno)
+                if alumno not in libreta_universitaria.keys():
+                    libreta_universitaria[alumno] = promedio
             linea = f.readline()
     return libreta_universitaria
 
@@ -354,14 +355,17 @@ def promedio_estudiante (archivo,lu:str)->float:
     with open (archivo,encoding='utf-8') as f:
         linea = f.readline()
         while linea != '':
-            alumno_actual:str = (todas_palabras2(linea,','))[0]
-            nota_actual:float = (float((todas_palabras2(linea,','))[3]))
-            if (alumno_actual == lu):
-                suma_notas += nota_actual
-                cant_materias += 1
-            linea = f.readline()
+            if linea[0] != '\n':
+                alumno_actual:str = (todas_palabras2(linea,','))[0]
+                nota_actual:float = (float((todas_palabras2(linea,','))[3]))
+                if (alumno_actual == lu):
+                    suma_notas += nota_actual
+                    cant_materias += 1
+            linea = f.readline()  
     promedio = round(suma_notas / cant_materias,2)
     return promedio
 
 with open('reverso.txt',encoding='utf-8') as f:
     leer = f.readline()
+
+#21
