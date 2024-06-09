@@ -127,6 +127,7 @@ def generar_nros_al_azar (cantidad,desde,hasta:int)->Pila[int]:
         p.put(aleatorio)
     return p 
 
+
 def generar_pilas (palabras:list[str])->Pila[str]:
     p:Pila[int] = Pila()
     for palabra in range(len(palabras)):
@@ -134,6 +135,10 @@ def generar_pilas (palabras:list[str])->Pila[str]:
     return p 
 
 #9
+def devolver_a_la_pila (pila_orig,pila_aux:Pila)->None:
+    while not pila_aux.empty():
+        pila_orig.put(pila_aux.get())
+
 def cantidad_elementos(pila:Pila[int])->int:
     pila_aux:Pila[int] = Pila()
     contador:int = 0
@@ -143,13 +148,7 @@ def cantidad_elementos(pila:Pila[int])->int:
     devolver_a_la_pila(pila,pila_aux)
     return contador
 
-def devolver_a_la_pila (pila_orig,pila_aux:Pila)->None:
-    while not pila_aux.empty():
-        pila_orig.put(pila_aux.get())
-
-p:Pila[int] = Pila()
-p.put(1)
-p.put(2)
+cantidad_elementos(generar_nros_al_azar(5,0,11))
 
 #10
 def buscar_el_maximo (pila:Pila[int])->int:
@@ -219,6 +218,7 @@ def generar_nros_al_azar_cola(cantidad,desde,hasta:int)->Cola[int]:
         res.put(aleatorio)
     return res
 
+
 def generar_colas (cantidad:int)->Cola[int]:
     c:Cola[int] = Cola()
     n:int = 1
@@ -272,8 +272,17 @@ def armar_secuencia_bingo ()->Cola[int]:
     while len(nums_disponibles) > 0:
         posicion_aleatoria:int = np.random.randint(0,len(nums_disponibles))
         sec_bingo.put(nums_disponibles[posicion_aleatoria])
-        nums_disponibles.remove(nums_disponibles[posicion_aleatoria])
+        nums_disponibles.pop(posicion_aleatoria)
     return sec_bingo
+armar_secuencia_bingo()
+def eliminar_elemento (lista:list[int],num:int)->list[int]:
+    res:list[int] = []
+    for i in lista:
+        if i != num:
+            res.append(i)
+    return res
+
+
 
 def pertenece_cola (c:Cola[int],num:int)->bool:
     res:bool = False
